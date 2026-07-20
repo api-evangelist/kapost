@@ -1,0 +1,22 @@
+generated: '2026-07-19'
+method: searched
+source: https://developer.kapost.com/api-getting-started
+docs: https://developer.kapost.com/api-getting-started
+summary:
+  types: [http]
+  http_schemes: [basic]
+  notes: >-
+    HTTP Basic authentication. The username is a per-user API token obtained
+    from the user's edit-profile page in the Kapost instance; the password is
+    ignored (any value, e.g. "x"). All API actions appear to originate from the
+    account that owns the token. There is no OAuth 2.0 / OpenID Connect surface.
+schemes:
+  - name: basicAuth
+    type: http
+    scheme: basic
+    description: >-
+      Basic auth where the API token is supplied as the username and the
+      password is disregarded. Example:
+      curl -u "token:x" "https://your_instance.kapost.com/api/v1/content"
+    source: https://developer.kapost.com/api-getting-started
+    sources: [https://developer.kapost.com/api-getting-started]
