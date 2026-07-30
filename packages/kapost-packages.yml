@@ -1,0 +1,20 @@
+generated: '2026-07-19'
+method: searched
+source: https://developer.kapost.com/wordpress-plugin
+note: >-
+  No first-party client SDK library (npm, PyPI, RubyGems, etc.) is published for
+  the Kapost Content API. The one first-party distributable is the Kapost
+  WordPress plugin, which publishes content from Kapost to WordPress sites over
+  XML-RPC. It is not a REST API client library, so no `SDKs` pointer is emitted.
+packages:
+  - language: php
+    ecosystem: wordpress
+    registry: wordpress.org
+    name: kapost-byline
+    display_name: Kapost (Byline) WordPress plugin
+    url: https://wordpress.org/plugins/kapost-byline/
+    author: kapostintegrations
+    official: true
+    description: >-
+      First-party WordPress plugin (author "kapostintegrations") that publishes
+      posts from Kapost.com to a WordPress blog; integrates via XML-RPC.

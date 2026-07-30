@@ -1,0 +1,35 @@
+generated: '2026-07-19'
+method: searched
+source: https://developer.kapost.com/api-getting-started
+description: >-
+  Cross-cutting conventions for the Kapost Content REST API, captured from the
+  developer portal. No OpenAPI/Swagger specification is published, so these are
+  read from the documentation rather than derived from a spec.
+authentication:
+  style: http-basic
+  detail: API token as username, password ignored (see authentication/kapost-authentication.yml)
+base_url:
+  pattern: https://{instance}.kapost.com/api/{version}/{resource}
+  note: Per-tenant subdomain; SSL required.
+versioning:
+  scheme: uri-path
+  current: v1
+  detail: Version is the first path segment, e.g. /api/v1/.
+media_type:
+  response: application/json
+  detail: All responses are JSON.
+idempotency:
+  supported: false
+  detail: No idempotency-key header or mechanism is documented.
+pagination:
+  documented: false
+  detail: Pagination scheme is not documented on the developer portal.
+rate_limiting:
+  documented: false
+  detail: No rate-limit policy or headers are documented.
+error_envelope:
+  documented: false
+  detail: No structured error catalog / problem+json format is documented.
+cross_links:
+  authentication: authentication/kapost-authentication.yml
+  webhooks: asyncapi/kapost-webhooks.yml

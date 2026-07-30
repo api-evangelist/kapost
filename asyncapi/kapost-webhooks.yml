@@ -1,0 +1,43 @@
+generated: '2026-07-19'
+method: searched
+type: Webhooks
+source: https://developer.kapost.com/webhooks
+spec_type: none
+description: >-
+  Kapost publishes outbound webhooks (no AsyncAPI document). You register a
+  destination URL in the Kapost instance webhook settings and Kapost sends an
+  HTTP POST with a JSON body whenever content is created, modified, deleted, or
+  published. A test button is available on the webhook settings page. You may
+  configure an SSL endpoint so payloads are encrypted in transit; the docs do
+  not document an HMAC signature / signing-secret verification mechanism.
+delivery:
+  method: POST
+  content_type: application/json
+  transport_security: SSL endpoint supported (no documented HMAC signature)
+envelope:
+  fields:
+    - name: operation
+      description: The type of change. One of create, update, publish, delete.
+    - name: type
+      description: Object type. Currently only "content" (subject to change as webhooks expand).
+    - name: payload
+      description: Contains full_post with content metadata (id, creator_id, assignee_id, content_type, timestamps, draft status, custom fields).
+    - name: instance
+      description: Identifies the Kapost instance (id and subdomain).
+events:
+  - name: content.create
+    operation: create
+    type: content
+    description: Fired when a content item is created.
+  - name: content.update
+    operation: update
+    type: content
+    description: Fired when a content item is modified.
+  - name: content.publish
+    operation: publish
+    type: content
+    description: Fired when a content item is published.
+  - name: content.delete
+    operation: delete
+    type: content
+    description: Fired when a content item is deleted.

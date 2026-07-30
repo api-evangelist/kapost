@@ -1,0 +1,18 @@
+generated: '2026-07-19'
+method: searched
+host: https://kapost.com
+note: >-
+  kapost.com issues a 301 redirect to uplandsoftware.com for all paths,
+  including every /.well-known/ probe below; no well-known discovery documents
+  are served. Recorded as absent (valid, expected result).
+documents:
+  - path: /.well-known/security.txt
+    status: 301
+  - path: /.well-known/openid-configuration
+    status: 301
+  - path: /.well-known/oauth-authorization-server
+    status: 301
+  - path: /.well-known/api-catalog
+    status: 301
+  - path: /.well-known/ai-plugin.json
+    status: 301

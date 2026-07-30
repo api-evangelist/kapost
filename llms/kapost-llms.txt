@@ -1,0 +1,24 @@
+# Kapost
+
+> Kapost is a content operations platform (now part of Upland Software) for B2B marketing teams to plan, produce, distribute, and analyze content across the customer journey. It exposes a versioned REST Content API secured with HTTP Basic authentication (API token as username), returns JSON, and supports content webhooks, an XML-RPC interface, and a first-party WordPress plugin.
+
+## APIs
+- [Kapost Developer Portal](https://developer.kapost.com/): Home of the Content REST API, webhooks, and XML-RPC docs.
+- [API Getting Started](https://developer.kapost.com/api-getting-started): Base URL, HTTP Basic auth (token:x), JSON responses, uri-path versioning (/api/v1/).
+- [Content API Responses](https://developer.kapost.com/content-api-responses): Content resource response reference.
+- [Webhooks](https://developer.kapost.com/webhooks): Outbound content webhooks (create/update/publish/delete).
+- [XML-RPC](https://developer.kapost.com/xmlrpc-docs): XML-RPC method reference.
+- [WordPress Plugin](https://developer.kapost.com/wordpress-plugin): Kapost Byline plugin integration docs.
+
+## Artifacts
+- [Authentication](https://raw.githubusercontent.com/api-evangelist/kapost/refs/heads/main/authentication/kapost-authentication.yml): HTTP Basic auth profile.
+- [Webhooks catalog](https://raw.githubusercontent.com/api-evangelist/kapost/refs/heads/main/asyncapi/kapost-webhooks.yml): Content webhook event surface.
+- [Conventions](https://raw.githubusercontent.com/api-evangelist/kapost/refs/heads/main/conventions/kapost-conventions.yml): Cross-cutting API semantics.
+- [Packages](https://raw.githubusercontent.com/api-evangelist/kapost/refs/heads/main/packages/kapost-packages.yml): First-party WordPress plugin.
+- [Domain security](https://raw.githubusercontent.com/api-evangelist/kapost/refs/heads/main/security/kapost-domain-security.yml): TLS/DNS posture probe.
+
+## Docs
+- [Integrations (apps.kapost.com)](https://apps.kapost.com/): Kapost integrations directory.
+- [Blog](https://uplandsoftware.com/kapost/resources/blog/): Kapost resources blog on Upland Software.
+- [Log In](https://app.kapost.com/users/sign_in): Kapost application sign-in.
+- [Support](https://support.uplandsoftware.com/portal/ss/login): Upland Software support portal.
