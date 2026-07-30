@@ -1,20 +1,65 @@
 aid: kapost
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/kapost.png
 name: Kapost
-description: Kapost is a company surfaced as a portfolio company of techstars and added to the API Evangelist
-  network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: >-
+  Kapost is a content operations platform — now part of Upland Software — that
+  lets B2B marketing teams plan, produce, distribute, and analyze content across
+  the customer journey through its Canvas, Studio, Gallery, and Insights modules.
+  Kapost exposes a versioned REST Content API (/api/v1) secured with HTTP Basic
+  authentication using a per-user API token and returning JSON, plus outbound
+  content webhooks (create/update/publish/delete), an XML-RPC interface, and a
+  first-party WordPress plugin for publishing content from Kapost to WordPress
+  sites. This profile was enriched from Kapost's live developer portal.
 url: https://raw.githubusercontent.com/api-evangelist/kapost/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - techstars
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: enriched
+x-tier-reason: live-developer-portal
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-19'
 tags:
-- Company
-apis: []
+- Content Operations
+- Content Marketing
+- Content Management
+- Marketing
+- Sales Enablement
+- Webhooks
+- REST API
+- B2B
+- Upland Software
+apis:
+- name: Kapost Content API
+  description: >-
+    Versioned REST Content API for managing content, collections, ideas,
+    initiatives, custom fields, tasks, users, and insights. HTTP Basic auth with
+    a per-user API token (password ignored); JSON responses; uri-path versioning.
+  humanURL: https://developer.kapost.com/
+  baseURL: https://api.kapost.com/api/v1
+  tags:
+  - Content
+  - Webhooks
+  properties:
+  - type: Documentation
+    url: https://developer.kapost.com/
+  - type: Authentication
+    url: authentication/kapost-authentication.yml
+  - type: Webhooks
+    url: asyncapi/kapost-webhooks.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -23,3 +68,36 @@ maintainers:
 common:
 - type: Website
   url: https://kapost.com/
+- type: DeveloperPortal
+  url: https://developer.kapost.com/
+- type: Documentation
+  url: https://developer.kapost.com/
+- type: APIReference
+  url: https://developer.kapost.com/content-api-responses
+- type: GettingStarted
+  url: https://developer.kapost.com/api-getting-started
+- type: Integrations
+  url: https://apps.kapost.com/
+- type: Login
+  url: https://app.kapost.com/users/sign_in
+- type: Support
+  url: https://support.uplandsoftware.com/portal/ss/login
+- type: Blog
+  url: https://uplandsoftware.com/kapost/resources/blog/
+- type: Authentication
+  url: authentication/kapost-authentication.yml
+- type: Webhooks
+  url: asyncapi/kapost-webhooks.yml
+- type: Conventions
+  url: conventions/kapost-conventions.yml
+- type: Packages
+  url: packages/kapost-packages.yml
+- type: DomainSecurity
+  url: security/kapost-domain-security.yml
+- type: LLMsTxt
+  url: llms/kapost-llms.txt
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence
