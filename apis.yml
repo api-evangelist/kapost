@@ -31,7 +31,7 @@ x-tier: enriched
 x-tier-reason: live-developer-portal
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-19'
+modified: '2026-08-13'
 tags:
 - Content Operations
 - Content Marketing
@@ -45,9 +45,16 @@ tags:
 apis:
 - name: Kapost Content API
   description: >-
-    Versioned REST Content API for managing content, collections, ideas,
-    initiatives, custom fields, tasks, users, and insights. HTTP Basic auth with
-    a per-user API token (password ignored); JSON responses; uri-path versioning.
+    Versioned REST Content API with 67 documented operations across content,
+    collections, comments, reminders, tasks, visibility, ideas, initiatives,
+    custom fields, content types, destinations, memberships, users and insights.
+    HTTP Basic auth with a per-user API token (password ignored); JSON responses
+    wrapped in a response/count/pagination envelope; page/per_page pagination;
+    basic/full/dynamic response detail levels; uri-path versioning. The callable
+    base URL is the customer's own instance subdomain
+    (https://{instance}.kapost.com/api/v1) — there is no shared API host. The
+    developer portal ships a live "Try it" API playground for every endpoint. No
+    OpenAPI specification is published.
   humanURL: https://developer.kapost.com/
   baseURL: https://api.kapost.com/api/v1
   tags:
@@ -56,10 +63,20 @@ apis:
   properties:
   - type: Documentation
     url: https://developer.kapost.com/
+  - type: APIReference
+    url: https://developer.kapost.com/content-api-responses
   - type: Authentication
     url: authentication/kapost-authentication.yml
   - type: Webhooks
     url: asyncapi/kapost-webhooks.yml
+  - type: Conventions
+    url: conventions/kapost-conventions.yml
+  - type: DataModel
+    url: data-model/kapost-data-model.yml
+  - type: Sandbox
+    url: sandbox/kapost-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/kapost-rate-limits.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -96,8 +113,30 @@ common:
   url: security/kapost-domain-security.yml
 - type: LLMsTxt
   url: llms/kapost-llms.txt
+- type: PrivacyPolicy
+  url: https://uplandsoftware.com/privacy/
+- type: GitHubOrganization
+  url: https://github.com/kapost
+- type: Sandbox
+  url: sandbox/kapost-sandbox.yml
+- type: Components
+  url: components/kapost-components.yml
+- type: DataModel
+  url: data-model/kapost-data-model.yml
+- type: Conformance
+  url: conformance/kapost-conformance.yml
+- type: Compliance
+  url: https://trust.uplandsoftware.com/
+- type: TrustCenter
+  url: security/kapost-trust-center.yml
+- type: Lifecycle
+  url: lifecycle/kapost-lifecycle.yml
+- type: Plans
+  url: plans/kapost-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/kapost-rate-limits.yml
 x-enrichment:
-  date: '2026-07-19'
-  status: backfilled
+  date: '2026-08-13'
+  status: enriched
+  artifacts_added: 9
   pass: local-v1
-  note: backfilled from .gitignore signal + verified work evidence
