@@ -1,0 +1,47 @@
+generated: '2026-08-13'
+method: searched
+probe: true
+source: https://trust.uplandsoftware.com/
+url: https://trust.uplandsoftware.com/
+also: https://uplandsoftware.com/security/
+ownership_note: >-
+  Kapost is a product of Upland Software (acquired 2019) and has no standalone trust center;
+  kapost.com 301-redirects to uplandsoftware.com/kapost/. The Upland Trust Center is the
+  provider's own published trust surface for the Kapost product — it carries a per-product
+  selector that includes Kapost. Recorded against the parent brand for that reason.
+platform: SafeBase
+access_model: >-
+  The landing page and the certification list are public and unauthenticated. Downloading the
+  underlying reports (SOC 2 report, pen test summaries, questionnaire answers) requires requesting
+  access via the "Get Access" button and signing an NDA.
+certifications:
+  - SOC 2 Type 2
+  - SOC 1 Type 2
+  - ISO/IEC 27001:2022
+  - PCI DSS
+  - CSA STAR Level 1
+  - GDPR
+  - CCPA
+  - PIPEDA
+  - GLBA
+  - EU-US Data Privacy Framework
+  - Swiss-US Data Privacy Framework
+  - UK Extension to the EU-US Data Privacy Framework
+security_program:
+  dedicated_security_team: true
+  secure_sdlc: true
+  third_party_assessments: true
+  automated_code_scanning: true
+  hosting: [Amazon Web Services, Microsoft Azure]
+  stated_uptime_target: "99.99% (cloud provider global average, per Upland's security page)"
+evidence:
+  - source: https://trust.uplandsoftware.com/
+    http_status: 200
+    keywords: [trust center, soc 2 type 2, iso/iec 27001:2022, pci dss, csa star level 1, gdpr]
+  - source: https://uplandsoftware.com/security/
+    http_status: 200
+    keywords: [cyber security team, secure product development, trust center]
+gaps:
+  - No published vulnerability disclosure policy or bug bounty program was found.
+  - No security.txt is served on kapost.com, uplandsoftware.com or any Kapost host.
+  - No public status page (kapost.statuspage.io and upland.statuspage.io are unclaimed and redirect to Atlassian marketing).

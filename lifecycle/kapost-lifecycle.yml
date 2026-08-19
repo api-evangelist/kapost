@@ -1,0 +1,69 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://developer.kapost.com/api-getting-started ; https://developer.kapost.com/ ;
+  https://uplandsoftware.com/security/ ; https://support.uplandsoftware.com/
+versioning:
+  scheme: uri-path
+  current: v1
+  docs: https://developer.kapost.com/api-getting-started
+  detail: >-
+    "API Version is the first part of the path" — every documented operation sits under /api/v1/.
+    No v2 exists and no version-negotiation header is documented.
+deprecation:
+  policy_url: null
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  detail: >-
+    No deprecation policy, no RFC 8594 Sunset/Deprecation header support, and no deprecated-endpoint
+    notices are published anywhere on the developer portal. Because no policy exists, NO
+    `Deprecation` pointer is emitted in apis.yml.
+deprecated_operations: []
+status_page:
+  url: null
+  published: false
+  detail: >-
+    No public status page. kapost.statuspage.io and upland.statuspage.io both answer HTTP 200 but
+    resolve to Atlassian's Statuspage marketing site (unclaimed subdomains) — a soft-404, not a
+    status page. status.kapost.com does not resolve. Because no status page exists, NO `StatusPage`
+    pointer is emitted in apis.yml.
+  probes:
+    - {url: 'https://kapost.statuspage.io/', status: 200, verdict: soft-404 redirect to atlassian.com/software/statuspage}
+    - {url: 'https://upland.statuspage.io/', status: 200, verdict: soft-404 redirect to atlassian.com/software/statuspage}
+    - {url: 'https://status.kapost.com/', status: 000, verdict: does not resolve}
+sla:
+  url: null
+  uptime_target: "99.99% (stated on uplandsoftware.com/security as the cloud providers' global average, not a contractual API SLA)"
+  detail: >-
+    No published SLA document for the Kapost API. Contractual terms are handled per-customer.
+changelog:
+  url: null
+  published: false
+  detail: >-
+    No dated API changelog or release-notes feed is published. The developer portal has no
+    changelog page (/changelog → 404) and Upland's release notes sit behind the customer support
+    portal login (support.uplandsoftware.com). Because nothing dated is public, NO `ChangeLog`
+    pointer is emitted in apis.yml.
+support:
+  portal: https://support.uplandsoftware.com/portal/ss/login
+  gate: login-required
+  detail: >-
+    Support and product documentation for Kapost live in the Upland customer support portal, which
+    requires a customer login. The developer portal itself is fully public.
+product_lifecycle:
+  vendor: Upland Software
+  acquired: '2019'
+  detail: >-
+    Kapost was acquired by Upland Software in 2019 and is sold as Upland Kapost. kapost.com
+    301-redirects to uplandsoftware.com/kapost/. The developer portal and API host remain live and
+    on their own domain.
+maturity_signals:
+  api_version_unchanged_since: v1 (no successor announced)
+  newest_first_party_package_release: '2025-06-18'
+  docs_host_live: true
+  http_destination_samples_last_push: '2024-01-10'
+cross_links:
+  conventions: conventions/kapost-conventions.yml
+  conformance: conformance/kapost-conformance.yml
+  trust_center: security/kapost-trust-center.yml

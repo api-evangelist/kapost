@@ -1,11 +1,44 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: searched
-source: https://developer.kapost.com/wordpress-plugin
+source: >-
+  https://developer.kapost.com/wordpress-plugin ; https://wordpress.org/plugins/kapost-byline/ ;
+  https://github.com/kapost ; registry metadata endpoints (api.wordpress.org, registry.npmjs.org,
+  rubygems.org)
 note: >-
-  No first-party client SDK library (npm, PyPI, RubyGems, etc.) is published for
-  the Kapost Content API. The one first-party distributable is the Kapost
-  WordPress plugin, which publishes content from Kapost to WordPress sites over
-  XML-RPC. It is not a REST API client library, so no `SDKs` pointer is emitted.
+  No first-party client SDK library for the Kapost Content REST API is published on any registry
+  (npm, PyPI, RubyGems, Packagist, Maven Central, NuGet, crates.io, pkg.go.dev). Registry searches
+  for "kapost" return only the packages below. Because none of them is a REST API client, NO `SDKs`
+  pointer is emitted — the ergonomics sdk_count checks must not be credited here. The public
+  github.com/kapost organization holds ~100 repositories, but they are internal engineering tools,
+  CI/CD GitHub Actions, and forks of third-party gems rather than API clients.
+registries_checked:
+  - registry: wordpress.org
+    query: kapost
+    result: hit
+  - registry: npm
+    query: kapost
+    result: hit (one @kapost-scoped UI component, not an API client)
+  - registry: rubygems
+    query: kapost
+    result: hit (two first-party engineering utilities, not API clients)
+  - registry: pypi
+    query: kapost
+    result: 404
+  - registry: packagist
+    query: kapost
+    result: none
+  - registry: maven-central
+    query: kapost
+    result: none
+  - registry: nuget
+    query: kapost
+    result: none
+  - registry: crates.io
+    query: kapost
+    result: none
+  - registry: pkg.go.dev
+    query: kapost
+    result: none
 packages:
   - language: php
     ecosystem: wordpress
@@ -15,6 +48,65 @@ packages:
     url: https://wordpress.org/plugins/kapost-byline/
     author: kapostintegrations
     official: true
+    api_client: false
+    version: 2.3.0
+    published: '2025-06-18'
+    downloads: 11118
+    tested_up_to: '6.8.8'
+    first_released: '2011-02-12'
+    version_source: https://api.wordpress.org/plugins/info/1.0/kapost-byline.json
     description: >-
-      First-party WordPress plugin (author "kapostintegrations") that publishes
-      posts from Kapost.com to a WordPress blog; integrates via XML-RPC.
+      First-party WordPress plugin (author "kapostintegrations") that publishes posts from Kapost
+      to a WordPress blog over XML-RPC. It is a publishing destination integration, not a client
+      library for the Content REST API.
+  - language: javascript
+    registry: npm
+    name: "@kapost/react-component-slider"
+    url: https://www.npmjs.com/package/@kapost/react-component-slider
+    install: npm install @kapost/react-component-slider
+    official: true
+    api_client: false
+    version: 1.0.5
+    published: '2018-05-03'
+    version_source: https://registry.npmjs.org/@kapost%2Freact-component-slider
+    source_code: https://github.com/kapost/react-component-slider
+    description: >-
+      Responsive React component slider published under the first-party @kapost npm scope. A UI
+      widget open-sourced by Kapost engineering; unrelated to the Content API. Last published 2018.
+  - language: ruby
+    registry: rubygems
+    name: kapost_deploy
+    url: https://rubygems.org/gems/kapost_deploy
+    install: gem install kapost_deploy
+    official: true
+    api_client: false
+    version: 0.7.1
+    published: '2020-12-23'
+    version_source: https://rubygems.org/api/v1/gems/kapost_deploy.json
+    source_code: https://github.com/kapost/kapost_deploy
+    description: >-
+      Deployment rake tasks for Kapost applications using Heroku pipelines. First-party internal
+      engineering tooling, not a Content API client.
+  - language: ruby
+    registry: rubygems
+    name: kapost-bootstrapper
+    url: https://rubygems.org/gems/kapost-bootstrapper
+    install: gem install kapost-bootstrapper
+    official: true
+    api_client: false
+    version: 1.0.7
+    published: '2020-04-23'
+    version_source: https://rubygems.org/api/v1/gems/kapost-bootstrapper.json
+    source_code: https://github.com/kapost/kapost-bootstrapper
+    author: Kapost Engineering
+    description: >-
+      Helper utility for a Ruby app to declare and set up its development dependencies. First-party
+      internal engineering tooling, not a Content API client.
+decay_signal:
+  api_client_libraries: 0
+  newest_first_party_release: '2025-06-18'
+  newest_first_party_package: kapost-byline
+  note: >-
+    The only first-party package still receiving releases is the WordPress publishing plugin
+    (2.3.0, 2025-06-18). Every other first-party package's last release predates 2021. An
+    integrator against the Kapost Content API writes raw HTTP.

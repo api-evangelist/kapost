@@ -1,7 +1,7 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: searched
 type: Webhooks
-source: https://developer.kapost.com/webhooks
+source: https://developer.kapost.com/webhooks ; https://github.com/kapost/http-destination-samples
 spec_type: none
 description: >-
   Kapost publishes outbound webhooks (no AsyncAPI document). You register a
@@ -41,3 +41,64 @@ events:
     operation: delete
     type: content
     description: Fired when a content item is deleted.
+testing:
+  test_button: true
+  detail: >-
+    The Kapost webhook settings page carries a test button that fires a sample delivery so an
+    integrator can confirm their server responds correctly.
+outbound_destinations:
+  - name: Generic HTTP Destination
+    kind: outbound-publish-callback
+    docs: https://developer.kapost.com/http-destination
+    samples: https://github.com/kapost/http-destination-samples
+    samples_license: Unlicense
+    samples_last_push: '2024-01-10'
+    configured_in: Kapost App Center
+    gate: "Contact your customer success manager to enable."
+    description: >-
+      A second, richer outbound surface distinct from content webhooks. Kapost POSTs to a
+      customer-built HTTP endpoint to publish content. The endpoint must implement three actions
+      signalled by a header rather than by path.
+    actions:
+      - {action: auth, method: POST, description: Connection/authentication handshake.}
+      - {action: publish, method: POST, description: Publish a content item to the destination.}
+      - {action: republish, method: POST, description: Re-publish a previously published item.}
+    mandatory_headers:
+      - {name: Content-Type, value: application/json}
+      - {name: X-Kapost-Platform, value: HTTP}
+      - {name: X-Kapost-Action, value: 'auth | publish | republish'}
+    authentication_options:
+      - {mode: None, detail: No authentication.}
+      - {mode: Basic Auth, detail: 'Authorization: Basic base64(username:password)'}
+      - {mode: Bearer (API Key), detail: 'Authorization: Bearer <api_key>'}
+      - {mode: Payload (JSON), detail: User-defined custom JSON key/value payload sent with every request.}
+    signature_options:
+      - {mode: None}
+      - {mode: SHA1, detail: SHA1 signature computed over a configured shared secret.}
+      - {mode: SHA256, detail: SHA256 signature computed over a configured shared secret.}
+    custom_header:
+      supported: true
+      detail: 'An optional additional request header, required to be named in the form X-Your-Header-Name.'
+  - name: XML-RPC (MetaWeblog subset)
+    kind: outbound-publish-rpc
+    docs: https://developer.kapost.com/xmlrpc-docs
+    files_docs: https://developer.kapost.com/xmlrpc-files
+    description: >-
+      For publishing into a CMS, Kapost calls a customer-hosted standards-compliant XML-RPC
+      endpoint implementing a subset of the MetaWeblog API, plus Kapost-specific file methods.
+    required_methods:
+      - {method: blogger.getUsersBlogs, detail: 'Returns [{blogid, blogName}]; must return at least one blog. The blog_id plus username/password authenticate all subsequent calls.'}
+      - {method: metaWeblog.newPost, detail: 'newPost(blog_id, username, password, content, publish) — creates a post.'}
+      - {method: kapost.newFile, detail: 'Pushes an individual file (e.g. a Word or PDF document) to the CMS.'}
+    error_contract: >-
+      All methods are expected to raise standards-compliant XML-RPC faults on error. Kapost states
+      it cannot debug faults in customer-implemented endpoints.
+    reference_implementation: >-
+      A WordPress sample is provided and explicitly marked NOT production ready; the shipping
+      first-party integration is the Kapost Byline WordPress plugin.
+asyncapi_document:
+  published: false
+  detail: >-
+    No AsyncAPI document exists for any of these three outbound surfaces. Probed
+    /asyncapi.yaml, /asyncapi.json on developer.kapost.com and api.kapost.com — 404/401.
+    Recorded as a Webhooks surface only; no `AsyncAPI` pointer is emitted.

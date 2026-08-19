@@ -1,0 +1,259 @@
+generated: '2026-08-13'
+method: derived
+source: >-
+  https://developer.kapost.com/ (API playground endpoint reference) ;
+  https://developer.kapost.com/content-api-responses (basic/full/dynamic response property tables) ;
+  https://developer.kapost.com/custom-field-mappings
+note: >-
+  Kapost publishes no OpenAPI, so this entity-relationship graph is derived from the documented
+  endpoint surface and the published response property tables rather than from schema $refs.
+  Identifiers are MongoDB ObjectId hex strings (24 chars); most id-bearing endpoints also accept a
+  URL-safe `slug` in place of the id.
+identifiers:
+  format: mongodb-objectid-hex
+  example: "5ce4238567e6e238d0000005"
+  slug_accepted: true
+  slug_note: >-
+    Content, initiatives and users accept either the ObjectId or the slug in the :id position,
+    e.g. /api/v1/content/welcome-to-kapost.
+tenancy:
+  model: per-instance subdomain
+  pattern: https://{instance}.kapost.com/api/v1/{resource}
+  instance_object: {id: string, name: string, subdomain: string}
+  newsroom_id: >-
+    Most objects (content_type, custom_field, initiative) carry a `newsroom_id` — the internal
+    identifier of the Kapost instance/newsroom that owns the record.
+entities:
+  - name: content
+    description: The central object — a piece of marketing content moving through the Kapost workflow.
+    collection: /api/v1/content
+    operations: [Show Content, List Content, Create Content, Update Content, Delete Content]
+    key_fields:
+      - {field: id, type: string}
+      - {field: slug, type: string, note: unique across all content}
+      - {field: title, type: string}
+      - {field: preferred_title, type: string}
+      - {field: content, type: string, note: HTML body; blank when the content type has no text body}
+      - {field: state, type: enum, values: [production, promotion, completed]}
+      - {field: progress_stage, type: enum, values: [planned, in_progress, complete]}
+      - {field: archived, type: boolean}
+      - {field: is_draft, type: boolean}
+      - {field: next_task, type: string}
+      - {field: factory_url, type: string, note: canonical content URL in the Kapost app}
+      - {field: published_url, type: string}
+      - {field: published_date, type: datetime}
+      - {field: library_tracking_url, type: string}
+      - {field: media_url, type: string}
+      - {field: submission_deadline, type: datetime}
+      - {field: publish_deadline, type: datetime}
+      - {field: privacy, type: enum, values: [private, members]}
+      - {field: updated_at, type: datetime}
+    relationships:
+      - {to: user, kind: belongs_to, via: creator_id}
+      - {to: user, kind: belongs_to, via: assignee_id}
+      - {to: user, kind: belongs_to, via: owner, expands_to: owner_details}
+      - {to: user, kind: belongs_to, via: last_updated_by, expands_to: last_updated_by_details}
+      - {to: initiative, kind: has_many, via: campaign_ids}
+      - {to: content_type, kind: belongs_to, via: content_type}
+      - {to: persona, kind: has_many, via: persona_ids}
+      - {to: stage, kind: has_many, via: stage_ids}
+      - {to: custom_field, kind: has_many, via: custom_fields}
+      - {to: attachment, kind: has_many, via: attachments}
+      - {to: comment, kind: has_many, via: /api/v1/content/:content_id/comments}
+      - {to: reminder, kind: has_many, via: /api/v1/content/:content_id/reminders}
+      - {to: task, kind: has_many, via: /api/v1/content/:content_id/tasks}
+      - {to: visibility, kind: has_many, via: /api/v1/content/:content_id/visibility}
+      - {to: user, kind: has_many, via: invitee_ids}
+  - name: initiative
+    aliases: [campaign]
+    description: >-
+      A campaign/initiative grouping content. The API exposes it as `initiatives` but content
+      references it through `campaign_ids` — the same object under two names.
+    collection: /api/v1/initiatives
+    operations:
+      - List Initiatives
+      - Show Initiative
+      - Create Initiative
+      - Update Initiative
+      - Delete Initiative
+      - Bulk Archive Initiatives
+      - Bulk Unarchive Initiatives
+      - Bulk Delete Initiatives
+    key_fields:
+      - {field: id, type: string}
+      - {field: name, type: string}
+      - {field: start_date, type: datetime}
+      - {field: end_date, type: datetime}
+      - {field: created_at, type: datetime}
+      - {field: updated_at, type: datetime}
+      - {field: newsroom_id, type: string}
+    relationships:
+      - {to: content, kind: has_many, via: campaign_ids}
+      - {to: comment, kind: has_many, via: /api/v1/initiatives/:initiative_id/comments}
+      - {to: reminder, kind: has_many, via: /api/v1/initiatives/:initiative_id/reminders}
+      - {to: task, kind: has_many, via: /api/v1/initiatives/:initiative_id/tasks}
+  - name: idea
+    description: A pre-content idea in the Kapost ideation workflow.
+    collection: /api/v1/ideas
+    operations: [List Ideas, Show idea, Create Idea, Update Idea, Delete Idea]
+    relationships:
+      - {to: comment, kind: has_many, via: /api/v1/ideas/:idea_id/comments}
+      - {to: content, kind: has_one, via: idea, note: content carries an `idea` reference}
+  - name: task
+    description: A workflow task attached to content or an initiative; also listable instance-wide.
+    collection: /api/v1/tasks
+    nested_collections:
+      - /api/v1/content/:content_id/tasks
+      - /api/v1/initiatives/:initiative_id/tasks
+    key_fields:
+      - {field: id, type: string}
+      - {field: description, type: string}
+      - {field: completed, type: boolean}
+      - {field: completion_action, type: string, example: manual}
+      - {field: deadline, type: datetime}
+      - {field: deadline_offset, type: number}
+      - {field: deadline_offset_unit, type: string}
+      - {field: deadline_offset_task_id, type: string}
+      - {field: deadline_offset_task_action, type: string}
+      - {field: position, type: number}
+      - {field: state, type: number}
+    relationships:
+      - {to: user, kind: has_many, via: owner_ids}
+      - {to: task, kind: belongs_to, via: deadline_offset_task_id, note: task-to-task deadline chaining}
+  - name: comment
+    description: A discussion comment on content, an idea, or an initiative.
+    nested_collections:
+      - /api/v1/content/:content_id/comments
+      - /api/v1/ideas/:idea_id/comments
+      - /api/v1/initiatives/:initiative_id/comments
+    operations: [List Comments, Create Comment, Delete Comment]
+  - name: reminder
+    description: A dated reminder attached to content or an initiative.
+    nested_collections:
+      - /api/v1/content/:content_id/reminders
+      - /api/v1/initiatives/:initiative_id/reminders
+    operations: [List Reminders, Create Reminder, Update Reminder, Delete Reminder]
+  - name: visibility
+    description: Per-content access grants, individually and in bulk.
+    nested_collections: [/api/v1/content/:content_id/visibility]
+    operations:
+      - List Visibility
+      - Grant Visibility
+      - Revoke Visibility
+      - Bulk Grant Visibility (/visibility/bulkcreate)
+      - Bulk Revoke Visibility (/visibility/bulkdestroy)
+    key_fields:
+      - {field: group_ids, type: array}
+      - {field: user_ids, type: array}
+      - {field: access_summary, type: string, example: PRIVATE_INSTANCE}
+    relationships:
+      - {to: user, kind: has_many, via: user_ids}
+      - {to: group, kind: has_many, via: group_ids}
+  - name: custom_field
+    description: Instance-defined custom fields and their values on content.
+    collection: /api/v1/custom_fields
+    operations: [Show Custom Field, List Custom Fields, Create Custom Field, Update Custom Field, Delete Custom Field]
+    key_fields:
+      - {field: id, type: string}
+      - {field: name, type: string}
+      - {field: display_label, type: string}
+      - {field: field_type, type: string, example: text}
+      - {field: default_value, type: string}
+      - {field: select_value_ids, type: object}
+      - {field: archived_value_ids, type: array}
+      - {field: instructions, type: string}
+      - {field: visible_in_previews, type: boolean}
+      - {field: visible_in_insights, type: boolean}
+      - {field: options, type: object, note: "editor_or_admin_only, required_field, html, multiline, show_character_count, api_only"}
+      - {field: value, type: any, note: present when returned in the context of a content record}
+    relationships:
+      - {to: content, kind: has_many, via: custom_fields}
+      - {to: destination, kind: has_many, via: custom field mappings, note: mappings translate Kapost values to an external system's values}
+  - name: content_type
+    description: The instance's content type definitions (Blog Post, Event, Case Study, ...).
+    collection: /api/v1/content_types_reference
+    operations: [List Content Types Reference]
+    key_fields:
+      - {field: id, type: string}
+      - {field: display_name, type: string}
+      - {field: field_name, type: string}
+      - {field: body_type, type: string, example: any_file}
+      - {field: icon, type: string}
+      - {field: icon_css_class, type: string}
+      - {field: background_color, type: string}
+      - {field: newsroom_id, type: string}
+      - {field: updated_at, type: datetime}
+    relationships:
+      - {to: content, kind: has_many, via: content_type}
+  - name: collection
+    description: Saved groupings of content visible to the current user.
+    collection: /api/v1/collections
+    operations: [List Collections]
+  - name: user
+    collection: /api/v1/users
+    operations: [Show User, Update User]
+    key_fields:
+      - {field: id, type: string}
+      - {field: email, type: string}
+      - {field: name, type: string}
+      - {field: slug, type: string}
+      - {field: role, type: string, example: admin}
+      - {field: bio, type: string}
+      - {field: short_bio, type: string}
+      - {field: tz, type: string}
+      - {field: phone, type: string}
+      - {field: visitor, type: boolean}
+      - {field: removed, type: boolean}
+      - {field: superadmin, type: boolean}
+      - {field: follow_discussion_allowed, type: boolean}
+      - {field: avatar_feed_url, type: string}
+      - {field: avatar_thumbnail_url, type: string}
+      - {field: avatar_profile_url, type: string}
+      - {field: avatar_profile_large_url, type: string}
+      - {field: group_ids, type: array}
+    relationships:
+      - {to: group, kind: has_many, via: group_ids}
+  - name: membership
+    description: Instance membership roster.
+    collection: /api/v1/memberships
+    operations: [List Memberships]
+    relationships:
+      - {to: user, kind: belongs_to, via: user id}
+  - name: attachment
+    description: A file attached to content, stored in S3.
+    key_fields:
+      - {field: id, type: string}
+      - {field: url, type: string}
+      - {field: filename, type: string}
+      - {field: updated_at, type: datetime}
+      - {field: image_attributes, type: object, note: "caption, alt, title"}
+    relationships:
+      - {to: content, kind: belongs_to, via: attachments}
+  - name: destination
+    description: >-
+      A publish destination (WordPress, generic HTTP, External, ...) configured in the Kapost App
+      Center. Documented via the custom-field-mappings guide rather than the endpoint playground.
+    collection: /api/v1/destinations
+    operations: [List Destinations (filterable by name and platform)]
+    key_fields:
+      - {field: name, type: string}
+      - {field: platform, type: string, example: External}
+    relationships:
+      - {to: custom_field, kind: has_many, via: custom field mappings}
+  - name: insights_content
+    description: Content-level analytics rows.
+    collection: /api/v1/insights/content
+    operations: [List]
+  - name: insights_events
+    description: Event-level analytics rows.
+    collection: /api/v1/insights/events
+    operations: [List]
+surface_summary:
+  documented_operations: 67
+  resources: 15
+  http_methods: [GET, POST, PUT, DELETE]
+  spec_published: false
+cross_links:
+  conventions: conventions/kapost-conventions.yml
+  authentication: authentication/kapost-authentication.yml
+  webhooks: asyncapi/kapost-webhooks.yml

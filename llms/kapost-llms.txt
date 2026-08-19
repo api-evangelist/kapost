@@ -1,24 +1,49 @@
 # Kapost
 
-> Kapost is a content operations platform (now part of Upland Software) for B2B marketing teams to plan, produce, distribute, and analyze content across the customer journey. It exposes a versioned REST Content API secured with HTTP Basic authentication (API token as username), returns JSON, and supports content webhooks, an XML-RPC interface, and a first-party WordPress plugin.
+> Kapost is a content operations platform (now part of Upland Software) for B2B marketing teams to plan, produce, distribute, and analyze content across the customer journey. It exposes a versioned REST Content API (67 documented operations across content, ideas, initiatives, tasks, comments, reminders, visibility, custom fields, users, memberships and insights) secured with HTTP Basic authentication using a per-user API token, returns JSON, and adds three outbound integration surfaces: content webhooks, a generic HTTP publish destination, and an XML-RPC (MetaWeblog subset) CMS interface.
+
+## How to call it
+- Base URL is per-tenant and templated: `https://{instance}.kapost.com/api/v1/{resource}` — there is no shared API host (`api.kapost.com/api/v1/content` returns 404).
+- Auth: HTTP Basic. Put the API token in the username field and any value (conventionally `x`) in the password field. `curl -u "token:x" "https://your_instance.kapost.com/api/v1/content"`
+- Get a token from the API Token section of your edit-profile page inside your Kapost instance.
+- Responses are JSON, wrapped as `{ "response": [...], "count": N, "pagination": { previous, next, current, per_page, count, pages } }`.
+- Paginate with `page` and `per_page`. Shape the payload with `detail=basic|full` or with `columns[]=...`.
+- No idempotency keys, no documented rate limits, no documented error catalog, no OpenAPI specification.
 
 ## APIs
-- [Kapost Developer Portal](https://developer.kapost.com/): Home of the Content REST API, webhooks, and XML-RPC docs.
+- [Kapost Developer Portal](https://developer.kapost.com/): Home of the Content REST API, with a live "Try it" API playground covering every endpoint.
 - [API Getting Started](https://developer.kapost.com/api-getting-started): Base URL, HTTP Basic auth (token:x), JSON responses, uri-path versioning (/api/v1/).
-- [Content API Responses](https://developer.kapost.com/content-api-responses): Content resource response reference.
+- [Content API Responses](https://developer.kapost.com/content-api-responses): basic / full / dynamic response levels and the full content property tables.
+- [Custom Field Mappings](https://developer.kapost.com/custom-field-mappings): Mapping Kapost custom field values onto an external system's values via the Destinations API.
 - [Webhooks](https://developer.kapost.com/webhooks): Outbound content webhooks (create/update/publish/delete).
-- [XML-RPC](https://developer.kapost.com/xmlrpc-docs): XML-RPC method reference.
+- [HTTP Destination](https://developer.kapost.com/http-destination): Generic HTTP publish destination (auth/publish/republish actions, SHA1/SHA256 signatures).
+- [XML-RPC](https://developer.kapost.com/xmlrpc-docs): MetaWeblog-subset method reference for pushing content into a CMS.
+- [XML-RPC Files](https://developer.kapost.com/xmlrpc-files): File-push methods (kapost.newFile).
+- [Gallery Picker](https://developer.kapost.com/gallery-picker): Embeddable JS file picker over the Kapost Gallery.
 - [WordPress Plugin](https://developer.kapost.com/wordpress-plugin): Kapost Byline plugin integration docs.
 
 ## Artifacts
 - [Authentication](https://raw.githubusercontent.com/api-evangelist/kapost/refs/heads/main/authentication/kapost-authentication.yml): HTTP Basic auth profile.
-- [Webhooks catalog](https://raw.githubusercontent.com/api-evangelist/kapost/refs/heads/main/asyncapi/kapost-webhooks.yml): Content webhook event surface.
-- [Conventions](https://raw.githubusercontent.com/api-evangelist/kapost/refs/heads/main/conventions/kapost-conventions.yml): Cross-cutting API semantics.
-- [Packages](https://raw.githubusercontent.com/api-evangelist/kapost/refs/heads/main/packages/kapost-packages.yml): First-party WordPress plugin.
+- [Conventions](https://raw.githubusercontent.com/api-evangelist/kapost/refs/heads/main/conventions/kapost-conventions.yml): Base URL, pagination, response shaping, filtering, outbound conventions.
+- [Data model](https://raw.githubusercontent.com/api-evangelist/kapost/refs/heads/main/data-model/kapost-data-model.yml): Entity-relationship graph for the 15 Content API resources.
+- [Webhooks + outbound](https://raw.githubusercontent.com/api-evangelist/kapost/refs/heads/main/asyncapi/kapost-webhooks.yml): Content webhooks, HTTP Destination, XML-RPC.
+- [Conformance](https://raw.githubusercontent.com/api-evangelist/kapost/refs/heads/main/conformance/kapost-conformance.yml): Standards and compliance posture.
+- [Lifecycle](https://raw.githubusercontent.com/api-evangelist/kapost/refs/heads/main/lifecycle/kapost-lifecycle.yml): Versioning, deprecation, status page and changelog findings.
+- [Sandbox / console](https://raw.githubusercontent.com/api-evangelist/kapost/refs/heads/main/sandbox/kapost-sandbox.yml): The developer-portal API playground.
+- [Components](https://raw.githubusercontent.com/api-evangelist/kapost/refs/heads/main/components/kapost-components.yml): Gallery Picker, WordPress plugin, HTTP Destination.
+- [Packages](https://raw.githubusercontent.com/api-evangelist/kapost/refs/heads/main/packages/kapost-packages.yml): First-party packages (no API client SDK exists).
+- [Plans / pricing](https://raw.githubusercontent.com/api-evangelist/kapost/refs/heads/main/plans/kapost-plans-pricing.yml): No published pricing; demo request only.
+- [Rate limits](https://raw.githubusercontent.com/api-evangelist/kapost/refs/heads/main/rate-limits/kapost-rate-limits.yml): None documented.
+- [MCP candidate](https://raw.githubusercontent.com/api-evangelist/kapost/refs/heads/main/mcp/kapost-mcp.yml): Derived candidate tool surface — Kapost ships no MCP server.
+- [Trust center](https://raw.githubusercontent.com/api-evangelist/kapost/refs/heads/main/security/kapost-trust-center.yml): Upland Software trust center and certifications.
 - [Domain security](https://raw.githubusercontent.com/api-evangelist/kapost/refs/heads/main/security/kapost-domain-security.yml): TLS/DNS posture probe.
+- [Well-known probe](https://raw.githubusercontent.com/api-evangelist/kapost/refs/heads/main/well-known/kapost-well-known.yml): Verified absence of every /.well-known/ document.
 
 ## Docs
-- [Integrations (apps.kapost.com)](https://apps.kapost.com/): Kapost integrations directory.
+- [Integrations (apps.kapost.com)](https://apps.kapost.com/): Kapost App Center integrations directory.
+- [GitHub organization](https://github.com/kapost): ~100 public repositories (engineering tooling, GitHub Actions, HTTP destination samples).
 - [Blog](https://uplandsoftware.com/kapost/resources/blog/): Kapost resources blog on Upland Software.
 - [Log In](https://app.kapost.com/users/sign_in): Kapost application sign-in.
-- [Support](https://support.uplandsoftware.com/portal/ss/login): Upland Software support portal.
+- [Support](https://support.uplandsoftware.com/portal/ss/login): Upland Software support portal (customer login required).
+- [Trust Center](https://trust.uplandsoftware.com/): Upland Software trust center (SOC 2 Type 2, ISO/IEC 27001:2022, PCI DSS, CSA STAR Level 1, GDPR).
+- [Privacy Policy](https://uplandsoftware.com/privacy/): Upland Software privacy policy.

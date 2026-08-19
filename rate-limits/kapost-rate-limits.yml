@@ -1,0 +1,37 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://developer.kapost.com/api-getting-started ;
+  https://developer.kapost.com/ ;
+  https://developer.kapost.com/content-api-responses
+limit_count: 0
+note: >-
+  Kapost documents no rate limits. Every page of the developer portal was read — Getting Started,
+  the API playground endpoint reference, Content API Responses, Webhooks, XML-RPC, Custom Field
+  Mappings, HTTP Destination and Gallery Picker — and none mentions a quota, throttle, burst
+  allowance, 429 response, Retry-After, or any X-RateLimit-* / RateLimit-* response header. An
+  agent integrating against this API has no published runtime backoff signal to read and must
+  treat throttling as undefined behaviour.
+limits: []
+response_headers:
+  documented: []
+  observed: []
+  detail: >-
+    No rate-limit headers are documented. A live anonymous request to
+    https://api.kapost.com/api/v1/content returned HTTP 404 with security headers only
+    (strict-transport-security, x-frame-options, x-content-type-options, x-xss-protection,
+    content-security-policy) plus x-request-id and x-runtime — no X-RateLimit-* / RateLimit-* /
+    Retry-After header on any observed response. Authenticated responses could not be inspected
+    (the API requires a customer instance token).
+exhaustion:
+  status_code: null
+  retry_after: null
+pagination_as_load_control:
+  detail: >-
+    The only published request-volume control is pagination (page / per_page). No maximum per_page
+    value is documented.
+  source: conventions/kapost-conventions.yml
+evidence:
+  - {url: 'https://developer.kapost.com/api-getting-started', status: 200, finding: no rate-limit section}
+  - {url: 'https://developer.kapost.com/', status: 200, finding: no rate-limit or 429 mention across the full endpoint reference}
+  - {url: 'https://api.kapost.com/api/v1/content', status: 404, finding: 'anonymous request; no rate-limit headers on the response'}

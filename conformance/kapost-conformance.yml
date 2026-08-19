@@ -1,0 +1,93 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://developer.kapost.com/api-getting-started ;
+  https://developer.kapost.com/content-api-responses ;
+  https://developer.kapost.com/webhooks ;
+  https://github.com/kapost/http-destination-samples ;
+  https://trust.uplandsoftware.com/
+note: >-
+  Kapost publishes no OpenAPI/Swagger/AsyncAPI/GraphQL document, so every technical assertion below
+  is read from the live developer portal rather than derived from a machine-readable contract.
+standards:
+  - id: rfc7617-http-basic
+    conforms: true
+    evidence: >-
+      "The Kapost API utilizes HTTP Basic Authentication" — API token supplied as the username,
+      password ignored (https://developer.kapost.com/api-getting-started).
+  - id: oauth2
+    conforms: false
+    evidence: No OAuth 2.0 authorization server, no /oauth endpoints, no scope surface documented.
+  - id: oidc
+    conforms: false
+    evidence: /.well-known/openid-configuration returns 404/302 on every host.
+  - id: openapi
+    conforms: false
+    evidence: >-
+      /openapi.json, /openapi.yaml, /swagger.json, /api-docs, /redoc probed on api.kapost.com,
+      developer.kapost.com and app.kapost.com — all 404/401/302. No spec published.
+  - id: asyncapi
+    conforms: false
+    evidence: Webhooks are documented in prose only; no AsyncAPI document exists.
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: >-
+      No error catalog or problem+json format is documented; the API returns plain JSON
+      ({"error":"You need to sign in before continuing."} observed on an unauthenticated request).
+  - id: rest-uri-path-versioning
+    conforms: true
+    evidence: '"API Version is the first part of the path" — /api/v1/<resource>.'
+  - id: json-media-type
+    conforms: true
+    evidence: '"All responses are in the json format."'
+  - id: pagination
+    conforms: true
+    evidence: >-
+      Page/per_page request parameters plus a response-level `pagination` object
+      {previous, next, current, per_page, count, pages} and a top-level `count`
+      (https://developer.kapost.com/content-api-responses).
+  - id: idempotency
+    conforms: false
+    evidence: No idempotency key header, parameter or retry-safety contract is documented.
+  - id: webhooks
+    conforms: true
+    evidence: >-
+      Outbound HTTP POST callbacks on content create/update/publish/delete with a documented
+      JSON envelope (https://developer.kapost.com/webhooks).
+  - id: webhook-signature-verification
+    conforms: partial
+    evidence: >-
+      Content webhooks document no HMAC signature (SSL endpoint only). The separate HTTP
+      Destination integration DOES support SHA1/SHA256 signatures over a configured shared secret
+      (https://github.com/kapost/http-destination-samples).
+  - id: xml-rpc-metaweblog
+    conforms: true
+    evidence: >-
+      Kapost publishes to CMSes over a documented subset of the MetaWeblog XML-RPC API
+      (blogger.getUsersBlogs, metaWeblog.newPost, kapost.newFile ...).
+  - id: soc2-type2
+    conforms: true
+    evidence: Listed on the Upland Software Trust Center (https://trust.uplandsoftware.com/).
+  - id: iso-27001
+    conforms: true
+    evidence: 'ISO/IEC 27001:2022 listed on the Upland Software Trust Center.'
+  - id: pci-dss
+    conforms: true
+    evidence: PCI DSS listed on the Upland Software Trust Center.
+  - id: gdpr
+    conforms: true
+    evidence: GDPR and EU-US Data Privacy Framework listed on the Upland Software Trust Center.
+  - id: csa-star
+    conforms: true
+    evidence: CSA STAR Level 1 listed on the Upland Software Trust Center.
+  - id: hipaa
+    conforms: false
+    evidence: Not listed among the certifications on the Upland Software Trust Center.
+  - id: fedramp
+    conforms: false
+    evidence: Not listed among the certifications on the Upland Software Trust Center.
+cross_links:
+  trust_center: security/kapost-trust-center.yml
+  authentication: authentication/kapost-authentication.yml
+  conventions: conventions/kapost-conventions.yml
+  webhooks: asyncapi/kapost-webhooks.yml

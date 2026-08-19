@@ -1,0 +1,100 @@
+generated: '2026-08-13'
+method: derived
+status: candidate
+source: https://developer.kapost.com/ (documented Content API operation surface)
+note: >-
+  Kapost ships NO MCP server. Searches of the developer portal, the public github.com/kapost
+  organization (~100 repos), npm (@modelcontextprotocol and @kapost scopes) and the MCP registries
+  found nothing, and no /mcp or /sse endpoint answers on any Kapost host. The tools below are a
+  DERIVED CANDIDATE surface — what an MCP server over the documented Content API would expose —
+  not a product Kapost publishes. Because nothing is shipped, NO `MCPServer` pointer is emitted in
+  apis.yml: the pointer would assert an agent surface the provider does not serve.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: searched
+server:
+  name: kapost
+  transport: null
+  url: null
+authentication_if_built:
+  scheme: http-basic
+  detail: >-
+    Any server would carry the customer's per-user API token as the Basic username against their
+    own instance subdomain — there is no OAuth surface to delegate to, which is a real barrier to a
+    hosted multi-tenant MCP server.
+tools:
+  - {name: list_collections, description: List all collections visible to the current user, source_operation: 'GET /api/v1/collections'}
+  - {name: list_content, description: List and filter content, source_operation: 'GET /api/v1/content'}
+  - {name: get_content, description: Show a single content item by id or slug, source_operation: 'GET /api/v1/content/:id'}
+  - {name: create_content, description: Create a content item, source_operation: 'POST /api/v1/content'}
+  - {name: update_content, description: Update a content item or run submit/unsubmit/archive/unarchive/reject, source_operation: 'PUT /api/v1/content/:id'}
+  - {name: delete_content, description: Delete a content item, source_operation: 'DELETE /api/v1/content/:id'}
+  - {name: list_content_comments, description: List comments on a content item, source_operation: 'GET /api/v1/content/:content_id/comments'}
+  - {name: create_content_comment, description: Comment on a content item, source_operation: 'POST /api/v1/content/:content_id/comments'}
+  - {name: delete_content_comment, description: Delete a comment on a content item, source_operation: 'DELETE /api/v1/content/:content_id/comments/:id'}
+  - {name: list_content_reminders, description: List reminders on a content item, source_operation: 'GET /api/v1/content/:content_id/reminders'}
+  - {name: create_content_reminder, description: Create a reminder on a content item, source_operation: 'POST /api/v1/content/:content_id/reminders'}
+  - {name: update_content_reminder, description: Update a reminder on a content item, source_operation: 'PUT /api/v1/content/:content_id/reminders/:id'}
+  - {name: delete_content_reminder, description: Delete a reminder on a content item, source_operation: 'DELETE /api/v1/content/:content_id/reminders/:id'}
+  - {name: list_content_tasks, description: List tasks on a content item, source_operation: 'GET /api/v1/content/:content_id/tasks'}
+  - {name: get_content_task, description: Show a task on a content item, source_operation: 'GET /api/v1/content/:content_id/tasks/:id'}
+  - {name: create_content_task, description: Create a task on a content item, source_operation: 'POST /api/v1/content/:content_id/tasks'}
+  - {name: update_content_task, description: Update a task on a content item, source_operation: 'PUT /api/v1/content/:content_id/tasks/:id'}
+  - {name: delete_content_task, description: Delete a task on a content item, source_operation: 'DELETE /api/v1/content/:content_id/tasks/:id'}
+  - {name: list_content_visibility, description: List visibility grants on a content item, source_operation: 'GET /api/v1/content/:content_id/visibility'}
+  - {name: grant_content_visibility, description: Grant visibility on a content item, source_operation: 'POST /api/v1/content/:content_id/visibility'}
+  - {name: bulk_grant_content_visibility, description: Bulk grant visibility, source_operation: 'POST /api/v1/content/:content_id/visibility/bulkcreate'}
+  - {name: bulk_revoke_content_visibility, description: Bulk revoke visibility, source_operation: 'POST /api/v1/content/:content_id/visibility/bulkdestroy'}
+  - {name: revoke_content_visibility, description: Revoke a visibility grant, source_operation: 'DELETE /api/v1/content/:content_id/visibility/:id'}
+  - {name: list_content_types, description: List the instance content type reference, source_operation: 'GET /api/v1/content_types_reference'}
+  - {name: list_custom_fields, description: List custom fields, source_operation: 'GET /api/v1/custom_fields'}
+  - {name: get_custom_field, description: Show a custom field, source_operation: 'GET /api/v1/custom_fields/:id'}
+  - {name: create_custom_field, description: Create a custom field, source_operation: 'POST /api/v1/custom_fields'}
+  - {name: update_custom_field, description: Update a custom field, source_operation: 'PUT /api/v1/custom_fields/:id'}
+  - {name: delete_custom_field, description: Delete a custom field, source_operation: 'DELETE /api/v1/custom_fields/:id'}
+  - {name: list_ideas, description: List ideas, source_operation: 'GET /api/v1/ideas'}
+  - {name: get_idea, description: Show an idea, source_operation: 'GET /api/v1/ideas/:id'}
+  - {name: create_idea, description: Create an idea, source_operation: 'POST /api/v1/ideas'}
+  - {name: update_idea, description: Update an idea, source_operation: 'PUT /api/v1/ideas/:id'}
+  - {name: delete_idea, description: Delete an idea, source_operation: 'DELETE /api/v1/ideas/:id'}
+  - {name: list_idea_comments, description: List comments on an idea, source_operation: 'GET /api/v1/ideas/:idea_id/comments'}
+  - {name: create_idea_comment, description: Comment on an idea, source_operation: 'POST /api/v1/ideas/:idea_id/comments'}
+  - {name: delete_idea_comment, description: Delete a comment on an idea, source_operation: 'DELETE /api/v1/ideas/:idea_id/comments/:id'}
+  - {name: list_initiatives, description: List initiatives (campaigns), source_operation: 'GET /api/v1/initiatives'}
+  - {name: get_initiative, description: Show an initiative, source_operation: 'GET /api/v1/initiatives/:id'}
+  - {name: create_initiative, description: Create an initiative, source_operation: 'POST /api/v1/initiatives'}
+  - {name: update_initiative, description: Update an initiative, source_operation: 'PUT /api/v1/initiatives/:id'}
+  - {name: delete_initiative, description: Delete an initiative, source_operation: 'DELETE /api/v1/initiatives/:id'}
+  - {name: bulk_archive_initiatives, description: Bulk archive initiatives, source_operation: 'POST /api/v1/initiatives'}
+  - {name: bulk_unarchive_initiatives, description: Bulk unarchive initiatives, source_operation: 'POST /api/v1/initiatives'}
+  - {name: bulk_delete_initiatives, description: Bulk delete initiatives, source_operation: 'POST /api/v1/initiatives'}
+  - {name: list_initiative_comments, description: List comments on an initiative, source_operation: 'GET /api/v1/initiatives/:initiative_id/comments'}
+  - {name: create_initiative_comment, description: Comment on an initiative, source_operation: 'POST /api/v1/initiatives/:initiative_id/comments'}
+  - {name: delete_initiative_comment, description: Delete a comment on an initiative, source_operation: 'DELETE /api/v1/initiatives/:initiative_id/comments/:id'}
+  - {name: list_initiative_reminders, description: List reminders on an initiative, source_operation: 'GET /api/v1/initiatives/:initiative_id/reminders'}
+  - {name: create_initiative_reminder, description: Create a reminder on an initiative, source_operation: 'POST /api/v1/initiatives/:initiative_id/reminders'}
+  - {name: update_initiative_reminder, description: Update a reminder on an initiative, source_operation: 'PUT /api/v1/initiatives/:initiative_id/reminders/:id'}
+  - {name: delete_initiative_reminder, description: Delete a reminder on an initiative, source_operation: 'DELETE /api/v1/initiatives/:initiative_id/reminders/:id'}
+  - {name: list_initiative_tasks, description: List tasks on an initiative, source_operation: 'GET /api/v1/initiatives/:initiative_id/tasks'}
+  - {name: get_initiative_task, description: Show a task on an initiative, source_operation: 'GET /api/v1/initiatives/:initiative_id/tasks/:id'}
+  - {name: create_initiative_task, description: Create a task on an initiative, source_operation: 'POST /api/v1/initiatives/:initiative_id/tasks'}
+  - {name: update_initiative_task, description: Update a task on an initiative, source_operation: 'PUT /api/v1/initiatives/:initiative_id/tasks/:id'}
+  - {name: delete_initiative_task, description: Delete a task on an initiative, source_operation: 'DELETE /api/v1/initiatives/:initiative_id/tasks/:id'}
+  - {name: list_insights_content, description: List content-level analytics rows, source_operation: 'GET /api/v1/insights/content'}
+  - {name: list_insights_events, description: List event-level analytics rows, source_operation: 'GET /api/v1/insights/events'}
+  - {name: list_memberships, description: List instance memberships, source_operation: 'GET /api/v1/memberships'}
+  - {name: list_tasks, description: List tasks across the instance, source_operation: 'GET /api/v1/tasks'}
+  - {name: get_user, description: Show a user, source_operation: 'GET /api/v1/users/:id'}
+  - {name: update_user, description: Update a user, source_operation: 'PUT /api/v1/users/:id'}
+  - {name: list_destinations, description: List publish destinations, filterable by name and platform, source_operation: 'GET /api/v1/destinations'}
+coverage:
+  candidate_tools: 65
+  documented_operations: 67
+  input_schemas_available: false
+  input_schema_note: >-
+    Parameter tables are published per operation on the developer portal, but with no OpenAPI there
+    are no machine-readable inputSchemas to inherit — a builder would have to transcribe them.

@@ -1,0 +1,48 @@
+generated: '2026-08-13'
+method: searched
+source: https://developer.kapost.com/
+kind: interactive-api-console
+name: Kapost API Playground
+url: https://developer.kapost.com/
+description: >-
+  The Kapost developer portal ships a live interactive API console ("API Playground"). Every
+  documented endpoint expands in place to show its HTTP method, parameter table, and a "Try it"
+  button that issues the real request and renders the Url, Query, Code, Headers and Body of the
+  response. Kapost open-sources a matching documentation generator, cabbage_doc
+  (https://github.com/kapost/cabbage_doc, "a lean and mean interactive API documentation
+  generator"), though the served pages carry no generator marker confirming it.
+credentials:
+  model: live-instance-credentials
+  fields:
+    - {name: Subdomain, detail: The customer's Kapost instance subdomain.}
+    - {name: Token, detail: The user's API token from their edit-profile page in Kapost.}
+  detail: >-
+    The console is filled in with a real subdomain and a real API token at the top of the page and
+    then reused across every endpoint on the page.
+test_vs_live:
+  separate_test_mode: false
+  test_key_prefix: null
+  detail: >-
+    Kapost publishes NO test/sandbox mode. There is no test-vs-live key separation, no test-mode
+    token prefix, and no sandbox instance. The playground issues requests against the caller's own
+    production Kapost instance, so any write operation (Create Content, Delete Content, Bulk Delete
+    Initiatives) mutates production data.
+test_data:
+  magic_values: []
+  test_cards: []
+  fixtures: []
+  time_simulation: false
+  detail: >-
+    No magic test identifiers, seeded fixtures or test clocks are published. The IDs shown in the
+    docs (e.g. '51f05bc04aaaae4ae800000d', 'welcome-to-kapost') are illustrative examples in the
+    parameter tables, not working test data.
+webhook_testing:
+  supported: true
+  detail: >-
+    The Kapost webhook settings page carries a test button that fires a sample delivery so an
+    integrator can confirm their server responds correctly. The docs also suggest an external
+    request-capture service for inspecting payloads.
+  source: https://developer.kapost.com/webhooks
+caveats:
+  - Requires an existing paid Kapost instance; there is no self-serve signup or free tier.
+  - No isolated sandbox environment — the console is a production client.

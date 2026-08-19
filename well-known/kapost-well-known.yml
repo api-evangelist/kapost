@@ -1,18 +1,68 @@
-generated: '2026-07-19'
-method: searched
-host: https://kapost.com
+generated: '2026-08-13'
+method: probed
+source: live HTTP probes of every Kapost host in apis.yml
 note: >-
-  kapost.com issues a 301 redirect to uplandsoftware.com for all paths,
-  including every /.well-known/ probe below; no well-known discovery documents
-  are served. Recorded as absent (valid, expected result).
-documents:
-  - path: /.well-known/security.txt
-    status: 301
-  - path: /.well-known/openid-configuration
-    status: 301
-  - path: /.well-known/oauth-authorization-server
-    status: 301
-  - path: /.well-known/api-catalog
-    status: 301
-  - path: /.well-known/ai-plugin.json
-    status: 301
+  ZERO well-known documents are served. Every /.well-known/* path on every Kapost host returns a
+  404, a 301 to uplandsoftware.com, a 302 to the Rails sign-in page, or a 401 JSON/plain-text
+  "You need to sign in before continuing." No document was returned on any host, so NO `WellKnown`
+  and NO `SecurityTxt` pointer is emitted in apis.yml — this file records a verified ABSENCE, which
+  is valid data, not a discovery surface. The parent company (uplandsoftware.com) also returns 404
+  on /.well-known/security.txt.
+hosts:
+  - host: https://developer.kapost.com
+    role: developer portal (live docs + API playground)
+    documents:
+      - {path: /.well-known/security.txt, status: 404}
+      - {path: /.well-known/openid-configuration, status: 404}
+      - {path: /.well-known/oauth-authorization-server, status: 404}
+      - {path: /.well-known/oauth-protected-resource, status: 404}
+      - {path: /.well-known/api-catalog, status: 404}
+      - {path: /.well-known/ai-plugin.json, status: 404}
+  - host: https://api.kapost.com
+    role: API host (auth-gated Rails app)
+    note: 401/302 to /users/sign_in — the whole host is behind session auth.
+    documents:
+      - {path: /.well-known/security.txt, status: 401}
+      - {path: /.well-known/openid-configuration, status: 302}
+      - {path: /.well-known/oauth-authorization-server, status: 302}
+      - {path: /.well-known/oauth-protected-resource, status: 302}
+      - {path: /.well-known/api-catalog, status: 302}
+      - {path: /.well-known/ai-plugin.json, status: 401}
+  - host: https://kapost.com
+    role: marketing domain (301 redirects to uplandsoftware.com/kapost/)
+    documents:
+      - {path: /.well-known/security.txt, status: 301}
+      - {path: /.well-known/openid-configuration, status: 301}
+      - {path: /.well-known/oauth-authorization-server, status: 301}
+      - {path: /.well-known/oauth-protected-resource, status: 301}
+      - {path: /.well-known/api-catalog, status: 301}
+      - {path: /.well-known/ai-plugin.json, status: 301}
+  - host: https://app.kapost.com
+    role: application sign-in
+    documents:
+      - {path: /.well-known/security.txt, status: 302}
+      - {path: /.well-known/openid-configuration, status: 302}
+      - {path: /.well-known/oauth-authorization-server, status: 302}
+      - {path: /.well-known/oauth-protected-resource, status: 302}
+      - {path: /.well-known/api-catalog, status: 302}
+      - {path: /.well-known/ai-plugin.json, status: 302}
+  - host: https://apps.kapost.com
+    role: Kapost App Center (integrations directory)
+    documents:
+      - {path: /.well-known/security.txt, status: 401}
+      - {path: /.well-known/openid-configuration, status: 302}
+      - {path: /.well-known/oauth-authorization-server, status: 302}
+      - {path: /.well-known/oauth-protected-resource, status: 302}
+      - {path: /.well-known/api-catalog, status: 302}
+      - {path: /.well-known/ai-plugin.json, status: 401}
+  - host: https://uplandsoftware.com
+    role: parent company (Kapost is an Upland Software product)
+    documents:
+      - {path: /.well-known/security.txt, status: 404}
+agent_card:
+  probed: true
+  result: none
+  note: >-
+    /.well-known/agent-card.json and /.well-known/agent.json were probed on api.kapost.com,
+    developer.kapost.com and app.kapost.com. All returned 404/401/302 — no A2A agent card exists,
+    so no a2a/ artifact was written (search-only artifact; never derived).

@@ -1,0 +1,61 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://developer.kapost.com/gallery-picker ;
+  https://developer.kapost.com/gallery-picker-demo ;
+  https://developer.kapost.com/wordpress-plugin ;
+  https://developer.kapost.com/http-destination
+description: >-
+  Client-side and embeddable surfaces Kapost publishes for integrators. Distinct from server-side
+  SDKs (there are none — see packages/kapost-packages.yml).
+families:
+  - name: Gallery Picker
+    kind: embeddable-javascript-widget
+    docs: https://developer.kapost.com/gallery-picker
+    demo: https://developer.kapost.com/gallery-picker-demo
+    loader: https://<subdomain>.kapost.com/gallery/gallery_picker.js
+    loader_note: >-
+      Loaded from the customer's own Kapost subdomain via a <script> tag. Unversioned CDN-style URL;
+      a consumer cannot pin a version.
+    description: >-
+      Converts an embedded Kapost Gallery link into a file picker so a user can select content from
+      the Kapost Gallery and pull it into another environment (Google Docs, an intranet page).
+    activation: >-
+      The embedded gallery URL must carry the picker query parameters: ?embedded=true&picker=true
+    integration: >-
+      Integrators bind a click handler that opens the picker and supplies a callback; the callback
+      fires once per selection (multiple times when multiselect is enabled).
+    callback_payload:
+      id: String
+      title: String
+      kapostUrl: String
+      downloadUrl: String
+      mediaUrl: String
+      publishedUrls: >-
+        Array of objects — external_site_name, published_url, draft, scheduled_date,
+        published_date, platform, external_id
+  - name: Kapost (Byline) WordPress plugin
+    kind: cms-plugin
+    docs: https://developer.kapost.com/wordpress-plugin
+    registry: https://wordpress.org/plugins/kapost-byline/
+    version: 2.3.0
+    published: '2025-06-18'
+    description: >-
+      First-party WordPress plugin that receives content published from Kapost over XML-RPC and
+      creates/updates the corresponding WordPress post. Extensible from the WordPress side through
+      documented filters/hooks.
+  - name: Generic HTTP Destination
+    kind: server-side-integration-contract
+    docs: https://developer.kapost.com/http-destination
+    samples: https://github.com/kapost/http-destination-samples
+    samples_license: Unlicense
+    samples_updated: '2024-01-10'
+    description: >-
+      Not a UI component — an integrator-implemented HTTP endpoint that Kapost calls to publish
+      content. Configured in the Kapost App Center; the integrator implements three POST actions
+      (auth, publish, republish) signalled by the X-Kapost-Action header. Listed here because it is
+      the customer-side counterpart of the picker and plugin in the same integration toolkit.
+    gate: "Access is arranged through a customer success manager rather than self-serve."
+notes:
+  - No published component versioning: the Gallery Picker script URL is unpinned and served per-tenant.
+  - No npm-distributed component library for the Gallery Picker exists.

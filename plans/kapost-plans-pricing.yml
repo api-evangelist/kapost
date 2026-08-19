@@ -1,0 +1,28 @@
+generated: '2026-08-13'
+method: searched
+source: https://uplandsoftware.com/kapost/
+plan_count: 0
+currency: null
+note: >-
+  Kapost publishes no pricing at all. The product page (uplandsoftware.com/kapost/) offers only a
+  "Request a Demo" call to action routed through uplandsoftware.com/kapost/demo-request/; there is
+  no pricing page, no tier table, no free trial and no self-serve signup. Sibling Upland products
+  do publish pricing pages (e.g. /adestra/pricing/), so the absence is product-specific rather than
+  a site-wide policy. API access is included with a Kapost instance — the Content API has no
+  separate metered price, quota or overage published.
+plans: []
+access:
+  model: enterprise-sales
+  self_serve_signup: false
+  free_tier: false
+  free_trial: false
+  demo_request: https://uplandsoftware.com/kapost/demo-request/
+  api_included_with_subscription: true
+  premium_addons_note: >-
+    The Kapost App Center states that some apps are premium add-ons requiring a customer success
+    manager to enable, but no prices are published for them.
+evidence:
+  - {url: 'https://uplandsoftware.com/kapost/', status: 200, finding: demo-request CTA only, no pricing link}
+  - {url: 'https://uplandsoftware.com/kapost/pricing/', status: 404}
+  - {url: 'https://uplandsoftware.com/pricing/', status: 404}
+  - {url: 'https://apps.kapost.com/', status: 200, finding: "\"Contact your customer success manager\" gating on apps; premium add-ons unpriced"}

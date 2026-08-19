@@ -1,16 +1,29 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: searched
-source: https://developer.kapost.com/api-getting-started
+source: >-
+  https://developer.kapost.com/api-getting-started ;
+  https://developer.kapost.com/content-api-responses ;
+  https://developer.kapost.com/ (API playground parameter tables) ;
+  https://github.com/kapost/http-destination-samples
 description: >-
-  Cross-cutting conventions for the Kapost Content REST API, captured from the
-  developer portal. No OpenAPI/Swagger specification is published, so these are
-  read from the documentation rather than derived from a spec.
+  Cross-cutting conventions for the Kapost Content REST API, captured from the live developer
+  portal. No OpenAPI/Swagger specification is published, so these are read from the documentation
+  rather than derived from a spec.
 authentication:
   style: http-basic
-  detail: API token as username, password ignored (see authentication/kapost-authentication.yml)
+  detail: >-
+    API token as the Basic username, password ignored (any value, conventionally "x"). All actions
+    appear to originate from the account that owns the token. See
+    authentication/kapost-authentication.yml.
 base_url:
   pattern: https://{instance}.kapost.com/api/{version}/{resource}
-  note: Per-tenant subdomain; SSL required.
+  templated: true
+  variable: {name: instance, detail: The customer's own Kapost instance subdomain.}
+  note: >-
+    Per-tenant subdomain; SSL is required. There is NO shared API host: an anonymous probe of
+    https://api.kapost.com/api/v1/content returns HTTP 404, and api.kapost.com root 302s to
+    /users/sign_in. The documented base is the customer's own subdomain, so a caller cannot
+    construct a request without knowing their instance.
 versioning:
   scheme: uri-path
   current: v1
@@ -18,18 +31,104 @@ versioning:
 media_type:
   response: application/json
   detail: All responses are JSON.
+response_envelope:
+  documented: true
+  shape:
+    response: Array (or object) of the requested records.
+    count: Number of records in this response.
+    pagination: Object describing position within the result set.
+  detail: >-
+    List endpoints wrap results in a top-level `response` array alongside `count` and `pagination`.
+pagination:
+  documented: true
+  style: page-number
+  request_params:
+    - {name: page, type: numeric, detail: The (1-indexed) page number to retrieve.}
+    - {name: per_page, type: numeric, detail: The number of entries to retrieve per page.}
+  response_fields:
+    - {name: pagination.previous, detail: Previous page number, null on the first page.}
+    - {name: pagination.next, detail: Next page number, null on the last page.}
+    - {name: pagination.current, detail: Current page number.}
+    - {name: pagination.per_page, detail: Page size in effect.}
+    - {name: pagination.count, detail: Total number of matching records.}
+    - {name: pagination.pages, detail: Total number of pages.}
+  example: GET /api/v1/content?detail=basic&per_page=1&page=3
+response_shaping:
+  documented: true
+  detail_levels:
+    param: detail
+    values: [basic, full, dynamic]
+    note: >-
+      `basic` returns a compact record; `full` adds expanded objects (custom_fields, attachments,
+      last_updated_by_details, owner_details, content body). `dynamic` is selected implicitly by
+      supplying the `columns` parameter.
+  sparse_fields:
+    param: "columns[]"
+    detail: >-
+      Dynamic responses return a default field set plus any fields named in columns[], e.g.
+      ?columns[]=content_number&columns[]=published_urls
+  expansion:
+    detail: >-
+      Kapost has no generic `expand` parameter. Expansion is expressed through the detail level and
+      through paired scalar/object fields (`owner` + `owner_details`, `last_updated_by` +
+      `last_updated_by_details`).
+filtering:
+  documented: true
+  detail: >-
+    List Content accepts a rich filter set — campaign_id, category, content_number, content_type_id,
+    creator_id, destination_id, listener_id, user_id, state, search, and date-range filtering via
+    date_type (publish_deadline | submission_deadline | created_on | published_on) plus start/end.
+  id_or_slug: >-
+    Most id-bearing parameters accept either the MongoDB ObjectId or the URL-safe slug, e.g.
+    '51f05bc04aaaae4ae800000d' or 'welcome-to-kapost'.
 idempotency:
   supported: false
-  detail: No idempotency-key header or mechanism is documented.
-pagination:
-  documented: false
-  detail: Pagination scheme is not documented on the developer portal.
+  detail: No idempotency-key header, parameter or retry-safety contract is documented.
 rate_limiting:
   documented: false
-  detail: No rate-limit policy or headers are documented.
+  detail: No rate-limit policy, quota or response headers are documented. See rate-limits/kapost-rate-limits.yml.
 error_envelope:
   documented: false
-  detail: No structured error catalog / problem+json format is documented.
+  detail: >-
+    No structured error catalog, error-code registry or application/problem+json format is
+    documented. An unauthenticated request to api.kapost.com was observed returning a bare
+    {"error": "..."} JSON object, but that shape is not published as a contract.
+request_tracing:
+  documented: false
+  observed_header: x-request-id
+  detail: >-
+    No request-id / correlation-id header is documented. A live probe of
+    https://api.kapost.com/api/v1/content did return `x-request-id` and `x-runtime` on the response
+    (Rack/Rails defaults), so a correlation id is emitted in practice — but it is not published as
+    a contract and must not be relied on.
+metadata:
+  mechanism: custom_fields
+  detail: >-
+    Arbitrary per-instance metadata is modeled as admin-defined custom fields rather than a generic
+    metadata bag. Custom field mappings let an admin translate Kapost values to an external
+    system's values so integrations do not hard-code them.
+outbound_conventions:
+  webhooks:
+    detail: >-
+      Content webhooks POST a JSON envelope {operation, type, payload, instance}. SSL endpoint
+      supported; no HMAC signature documented. See asyncapi/kapost-webhooks.yml.
+  http_destination:
+    detail: >-
+      The generic HTTP Destination (configured in the Kapost App Center) POSTs to a customer
+      endpoint with mandatory headers Content-Type: application/json, X-Kapost-Platform: HTTP and
+      X-Kapost-Action: auth | publish | republish. Authentication options are None, Basic Auth,
+      Bearer (API key) or a user-defined JSON payload; signatures are None, SHA1 or SHA256 over a
+      configured shared secret; an optional custom X-*-named header may be added.
+    source: https://github.com/kapost/http-destination-samples
+  xml_rpc:
+    detail: >-
+      For publishing into a CMS, Kapost speaks a documented subset of the MetaWeblog XML-RPC API
+      (blogger.getUsersBlogs, metaWeblog.newPost/editPost/getPost, kapost.newFile ...) against a
+      customer-hosted endpoint.
 cross_links:
   authentication: authentication/kapost-authentication.yml
   webhooks: asyncapi/kapost-webhooks.yml
+  data_model: data-model/kapost-data-model.yml
+  rate_limits: rate-limits/kapost-rate-limits.yml
+  lifecycle: lifecycle/kapost-lifecycle.yml
+  conformance: conformance/kapost-conformance.yml
