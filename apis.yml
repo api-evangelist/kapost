@@ -38,6 +38,16 @@ tags:
 - Content Management
 - Marketing
 - Sales Enablement
+- Webhook
+- REST API
+- B2B
+- Upland Software
+tags_raw:
+- Content Operations
+- Content Marketing
+- Content Management
+- Marketing
+- Sales Enablement
 - Webhooks
 - REST API
 - B2B
@@ -58,6 +68,9 @@ apis:
   humanURL: https://developer.kapost.com/
   baseURL: https://api.kapost.com/api/v1
   tags:
+  - Content
+  - Webhook
+  tags_raw:
   - Content
   - Webhooks
   properties:
